@@ -1,7 +1,6 @@
-import { AmbientLight, AxesHelper, PerspectiveCamera, Scene, WebGL1Renderer } from "three";
+import { AmbientLight, AxesHelper, PerspectiveCamera, PointLight, Scene, WebGL1Renderer } from "three";
 import { Planet, Sun } from "./planets.mjs";
 import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
-
 
 class Demo {
     constructor() {
@@ -17,12 +16,13 @@ class Demo {
     }
     init() {
         this.loadUnits()
-        let light = new AmbientLight({ color: 0xfff });
+        let light = new AmbientLight({ color: 0xfff })
         let axis =new AxesHelper()
 
-        this.camera.position.set(100,100,100)
-        this.renderer.setSize(innerWidth, innerHeight);
+        this.camera.position.set(150,150,100)
+        this.renderer.setSize(innerWidth, innerHeight)
         document.body.append(this.renderer.domElement)
+        this.renderer.shadowMap.enabled = true
         this.scene.add(this.camera, light,axis)
     }
     async loadUnits() {
@@ -43,7 +43,7 @@ class Demo {
     }
     _raf() {
         requestAnimationFrame(dt => {
-            this.renderer.render(this.scene, this.camera)
+            this.update()
             this._raf()
         })
     }
@@ -63,7 +63,7 @@ class Demo {
             this.camera.zoom += 1
             this.camera.updateProjectionMatrix()
         }
-        if (r == 'm') {
+        if (r == 'm' && this.camera.zoom >1) {
             this.camera.zoom -= 1
             this.camera.updateProjectionMatrix()
         }
@@ -71,6 +71,12 @@ class Demo {
     }
     add(obj) {
         obj.init(this)
+    }
+    update(){
+        this.children.forEach(c=>{
+            c.update()
+        })
+        this.renderer.render(this.scene, this.camera)
     }
 }
 

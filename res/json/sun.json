@@ -1,7 +1,7 @@
 {
-    "radius":5,
-    "segments":20,
+    "radius":30,
+    "segments":30,
     "textures":["sun.jpg"],
-    "wireframe":true,
-    "distance": 20
+    "distance": 0,
+    "rotationSpeed":0.0003141592653589793
 }
