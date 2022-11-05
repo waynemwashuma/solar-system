@@ -1,0 +1,35 @@
+{
+  "name": "solar-system",
+  "version": "1.0.0",
+  "description": "all the solar system units",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev":"webpack-dev-server",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waynemwashuma/solar-system.git"
+  },
+  "keywords": [
+    "solar-system",
+    "sun",
+    "earth",
+    "moon"
+  ],
+  "author": "Wayne Mwashuma",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/waynemwashuma/solar-system/issues"
+  },
+  "homepage": "https://github.com/waynemwashuma/solar-system#readme",
+  "dependencies": {
+    "three": "^0.146.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
+  }
+}

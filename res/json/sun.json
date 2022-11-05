@@ -1,0 +1,7 @@
+{
+    "radius":5,
+    "segments":20,
+    "textures":["sun.jpg"],
+    "wireframe":true,
+    "distance": 20
+}

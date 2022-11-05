@@ -1,0 +1,8 @@
+{
+    "mercury": {
+        "radius": 1,
+        "textures": ["mercury.jpg"],
+        "distance": 20,
+        "segments": 300
+    }
+}
