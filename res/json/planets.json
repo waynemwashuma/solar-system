@@ -1,74 +1,114 @@
 {
     "mercury": {
+        "name": "mercury",
         "radius": 1,
         "textures": [
             "mercury.jpg"
         ],
         "distance": 40,
         "segments": 15,
-        "rotationSpeed":0.003141592653589793
+        "rotationSpeed": 0.003141592653589793,
+        "revolutionSpeed": 0.019634954084936207
     },
     "venus": {
+        "name": "venus",
         "radius": 3,
         "textures": [
             "venus.jpg"
         ],
         "distance": 50,
         "segments": 15,
-        "rotationSpeed":0.03141592653589793
+        "rotationSpeed": 0.03141592653589793,
+        "revolutionSpeed": 0.015707963267948967
     },
     "earth": {
+        "name": "earth",
         "radius": 3,
         "textures": [
             "earth.jpg"
         ],
         "distance": 60,
         "segments": 15,
-        "rotationSpeed":0.03141592653589793
+        "rotationSpeed": 0.03141592653589793,
+        "revolutionSpeed": 0.01121997376282069,
+        "moons": [
+            {
+                "distance": 5,
+                "radius": 1,
+                "segments": 10,
+                "rotationSpeed": 3.141592653589793,
+                "revolutionSpeed": 0.01121997376282069,
+                "textures": [
+                    "moon.jpg"
+                ]
+            }
+        ]
     },
     "mars": {
+        "name": "mars",
         "radius": 2,
         "textures": [
             "mars.jpg"
         ],
         "distance": 70,
         "segments": 15,
-        "rotationSpeed":0.03141592653589793
+        "rotationSpeed": 0.03141592653589793,
+        "revolutionSpeed": 0.008726646259971648
     },
     "jupiter": {
+        "name": "jupiter",
         "radius": 15,
         "textures": [
             "jupiter.jpg"
         ],
         "distance": 90,
         "segments": 30,
-        "rotationSpeed":0.003141592653589793
+        "rotationSpeed": 0.003141592653589793,
+        "revolutionSpeed": 0.006544984694978735
     },
     "saturn": {
+        "name": "saturn",
         "radius": 10,
         "textures": [
             "saturn.jpg"
         ],
         "distance": 110,
         "segments": 30,
-        "rotationSpeed":0.003141592653589793
+        "rotationSpeed": 0.003141592653589793,
+        "revolutionSpeed": 0.005235987755982988,
+        "ring": {
+            "distance": 5,
+            "radius": 1,
+            "segments": 10,
+            "innerRadius": 18,
+            "outerRadius": 18,
+            "rotationSpeed": 0.8141592653589793,
+            "revolutionSpeed": 0.01121997376282069,
+            "textures": [
+                "saturn-ring.png"
+            ]
+        }
     },
     "uranus": {
+        "name": "uranus",
         "radius": 7,
         "textures": [
             "uranus.jpg"
         ],
         "distance": 130,
         "segments": 15,
-        "rotationSpeed":0.003141592653589793
+        "rotationSpeed": 0.003141592653589793,
+        "revolutionSpeed": 0.003926990816987242
     },
     "neptune": {
+        "name": "neptune",
         "radius": 8,
         "textures": [
             "neptune.jpg"
         ],
         "distance": 150,
         "segments": 15,
-        "rotationSpeed":0.003141592653589793
+        "rotationSpeed": 0.003141592653589793,
+        "revolutionSpeed": 0.0022439947525641378
     }
 }

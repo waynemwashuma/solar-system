@@ -8,7 +8,6 @@ module.exports ={
     },
     devServer:{
         static:__dirname,
-        port:4000,
-        open:true
+        port:4000
     }
 }
