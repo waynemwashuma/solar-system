@@ -1,0 +1,9 @@
+{
+    "number":3000,
+    "maxDistance": 0.3,
+    "minDistance":0.8,
+    "revolutionSpeed": 0.0000015707963267948967,
+    "textures":[
+        "moon.jpg"
+    ]
+}

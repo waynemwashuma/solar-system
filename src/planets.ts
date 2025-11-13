@@ -38,6 +38,12 @@ type CelestialObjectOptions = {
   textures: string[];
   wireframe: boolean;
 }
+
+type AsteroidOptions = {
+  number: number;
+  minDistance?: number;
+  maxDistance?: number;
+}
 class Sun extends Object3D {
   orbitRotation = 0
   rotationSpeed: number;
@@ -102,19 +108,30 @@ class Moon extends Planet {
 }
 
 class Asteriods extends Planet {
-  constructor(params: { name?: string; revolutionSpeed?: number; rotationSpeed?: number; radius?: number; segments?: number; textures: string[]; wireframe: boolean; distance: number; }) {
+  constructor(params: CelestialObjectOptions & AsteroidOptions, range: [number, number]) {
     super(params)
-    this.name = 'asteroids'
     this.clear()
-    this.initAsteroids(params)
+    this.initAsteroids(params, range)
   }
-  initAsteroids(params: { name?: string | undefined; revolutionSpeed?: number | undefined; rotationSpeed?: number | undefined; radius?: number | undefined; segments?: number | undefined; textures?: string[]; wireframe?: boolean; distance?: number; number?: any; minDistance?: any; maxDistance?: any; }) {
-    let asteroidBuffer = []
+  initAsteroids(params: AsteroidOptions, range: [number, number]) {
+    const asteroidBuffer = []
+    const beltRange = range[0] - range[1]
     for (let i = 0; i < params.number; i++) {
-      let vector = new Vector3(randomFloatFromRange(-1, 1), randomFloatFromRange(-1, 1), randomFloatFromRange(-1, 1)).normalize().multiplyScalar(randomIntFromRange(params.minDistance, params.maxDistance))
+      const vector = new Vector3(
+        randomFloatFromRange(-1, 1),
+        randomFloatFromRange(-1, 1),
+        randomFloatFromRange(-1, 1)
+      )
+        .normalize()
+        .multiplyScalar(
+          randomIntFromRange(
+            range[0] + beltRange * (params.minDistance || 1),
+            range[1] - beltRange * (1 - (params.maxDistance || 1))
+          )
+        )
       asteroidBuffer.push(vector.x, vector.y, vector.z)
     }
-    let points = new BufferGeometry()
+    const points = new BufferGeometry()
     points.setAttribute("position", new Float32BufferAttribute(asteroidBuffer, 3))
     const mesh = new Points(points, new PointsMaterial({
       color: 0xffffff,
@@ -122,7 +139,6 @@ class Asteriods extends Planet {
     }))
     this.add(mesh)
   }
-  override update() { }
 }
 export {
   Planet,
