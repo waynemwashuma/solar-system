@@ -61,7 +61,7 @@
         "textures": [
             "jupiter.jpg"
         ],
-        "distance": 90,
+        "distance": 120,
         "segments": 30,
         "rotationSpeed": 0.003141592653589793,
         "revolutionSpeed": 0.006544984694978735
@@ -72,7 +72,7 @@
         "textures": [
             "saturn.jpg"
         ],
-        "distance": 110,
+        "distance": 180,
         "segments": 30,
         "rotationSpeed": 0.003141592653589793,
         "revolutionSpeed": 0.005235987755982988,
@@ -95,7 +95,7 @@
         "textures": [
             "uranus.jpg"
         ],
-        "distance": 130,
+        "distance": 250,
         "segments": 15,
         "rotationSpeed": 0.003141592653589793,
         "revolutionSpeed": 0.003926990816987242
@@ -106,7 +106,7 @@
         "textures": [
             "neptune.jpg"
         ],
-        "distance": 150,
+        "distance": 350,
         "segments": 15,
         "rotationSpeed": 0.003141592653589793,
         "revolutionSpeed": 0.0022439947525641378
