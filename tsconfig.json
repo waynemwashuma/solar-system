@@ -1,0 +1,32 @@
+{
+  "include": [
+    "./src"
+  ],
+  "compilerOptions": {
+
+    // type checking
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictBuiltinIteratorReturn": true,
+    "noImplicitReturns":true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch":true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitOverride": true,
+    "noImplicitAny": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+
+    // module resolution
+    "module": "es2022",
+    "moduleResolution": "node",
+    "target": "es2022",
+    "noEmit": true,
+    "checkJs": true,
+    "skipLibCheck":true
+  }
+}
