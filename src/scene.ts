@@ -1,11 +1,11 @@
 import { AmbientLight, AxesHelper, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from "three";
 import { Planet, Sun, Moon, createOrbitMesh, Asteriods } from "./planets.js";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { FlyControls } from "./flycontrols.js";
 
 class Demo extends Scene {
   renderer: WebGLRenderer;
   camera: PerspectiveCamera;
-  cameraController: OrbitControls;
+  cameraController: FlyControls;
   animateNo: number = -1;
   lasttime = 0;
   speed = 0.01
@@ -13,7 +13,7 @@ class Demo extends Scene {
     super()
     this.renderer = new WebGLRenderer();
     this.camera = new PerspectiveCamera(50, 1, 0.1, 1000)
-    this.cameraController = new OrbitControls(this.camera, this.renderer.domElement)
+    this.cameraController = new FlyControls(this.camera, this.renderer.domElement)
     this.children = []
     this.init()
     this._raf()
@@ -29,6 +29,9 @@ class Demo extends Scene {
     this.camera.lookAt(new Vector3(0, 0, 0))
     this.renderer.setSize(innerWidth, innerHeight)
     this.renderer.shadowMap.enabled = true
+    this.cameraController.dragToLook = true
+    this.cameraController.rollSpeed = 0.1
+    this.cameraController.movementSpeed = 5
     this.add(this.camera, light, axis)
     document.body.append(this.renderer.domElement)
   }
@@ -106,6 +109,7 @@ class Demo extends Scene {
   }
 
   update(dt: number) {
+    this.cameraController.update(dt)
     this.children.forEach(c => {
       c.traverse(child => {
         if (child instanceof Sun) {
