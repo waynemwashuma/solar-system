@@ -1,7 +1,7 @@
 import { AmbientLight, AxesHelper, Object3D, PerspectiveCamera, Quaternion, Scene, Vector3, WebGLRenderer } from "three";
 import { FlyControls } from "./flycontrols.js";
 import { OrbitControls } from "./orbitcontrols.js";
-import { Asteriods, createOrbitMesh, Moon, Planet, Sun } from "./planets.js";
+import { Asteriods, CelestialObject, createOrbitMesh, Moon, Planet, Ring, Sun, } from "./objects";
 
 class Demo extends Scene {
   renderer: WebGLRenderer;
@@ -75,6 +75,14 @@ class Demo extends Scene {
             }
           }
         }
+        if (planetData.ring) {
+          const { ring } = planetData;
+          planet.add(new Ring({
+            ...ring,
+            distance: 0,
+            revolutionSpeed: 0,
+          }))
+        }
         sun.add(planet)
         if (planetData.distance) {
           sun.add(createOrbitMesh(planetData.distance, planetData.distance, 100))
@@ -138,6 +146,10 @@ class Demo extends Scene {
     this.focusedObject = object
     this.cameraController.enabled = false
     this.orbitControls.enabled = true
+    if (object instanceof CelestialObject) {
+      this.orbitControls.minDistance = object.radius + 0.2
+      this.orbitControls.maxDistance = object.radius + 10
+    }
   }
 
   unfocus() {
@@ -179,7 +191,7 @@ class Demo extends Scene {
     }
     this.children.forEach(c => {
       c.traverse(child => {
-        if (child instanceof Sun) {
+        if (child instanceof CelestialObject) {
           child.update(dt)
         }
       })
