@@ -90,8 +90,8 @@ class FlyControls extends Controls<{}> {
 
     super.connect(element);
 
-    window.addEventListener('keydown', this._onKeyDown);
-    window.addEventListener('keyup', this._onKeyUp);
+    this.domElement?.addEventListener('keydown', this._onKeyDown);
+    this.domElement?.addEventListener('keyup', this._onKeyUp);
 
     this.domElement?.addEventListener('pointermove', this._onPointerMove);
     this.domElement?.addEventListener('pointerdown', this._onPointerDown);
@@ -101,8 +101,8 @@ class FlyControls extends Controls<{}> {
   }
 
   disconnet() {
-    window.removeEventListener('keydown', this._onKeyDown);
-    window.removeEventListener('keyup', this._onKeyUp);
+    this.domElement?.removeEventListener('keydown', this._onKeyDown);
+    this.domElement?.removeEventListener('keyup', this._onKeyUp);
 
     this.domElement?.removeEventListener('pointermove', this._onPointerMove);
     this.domElement?.removeEventListener('pointerdown', this._onPointerDown);
@@ -225,9 +225,6 @@ function onKeyDown(this: FlyControls, event: KeyboardEvent) {
 }
 
 function onKeyUp(this: FlyControls, event: KeyboardEvent) {
-
-  if (this.enabled === false) return;
-
   switch (event.code) {
     case 'KeyW': this._moveState.forward = 0; break;
     case 'KeyS': this._moveState.back = 0; break;

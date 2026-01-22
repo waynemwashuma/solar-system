@@ -81,7 +81,7 @@
             "radius": 1,
             "segments": 10,
             "innerRadius": 18,
-            "outerRadius": 18,
+            "outerRadius": 28,
             "rotationSpeed": 0.8141592653589793,
             "revolutionSpeed": 0.01121997376282069,
             "textures": [
