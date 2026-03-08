@@ -19,10 +19,11 @@ export class Ring extends CelestialObject {
     for (let i = 0; i < uvAttribute.count; i++) {
       const x = positionAttribute.getX(i);
       const y = positionAttribute.getY(i);
-      const angle = Math.atan2(y, x);
       const radius = Math.hypot(x, y);
-      const u = (angle + Math.PI) / (2 * Math.PI);
-      const v = (radius - innerRadius) / (outerRadius - innerRadius);
+
+      // The texture is a ring cross-section: map it by radius, reuse it for all angles.
+      const u = (radius - innerRadius) / (outerRadius - innerRadius);
+      const v = 0.5;
 
       uvAttribute.setXY(i, u, v);
     }
@@ -37,9 +38,9 @@ export class Ring extends CelestialObject {
       depthWrite: false,
     });
     const mesh = new Mesh(geometry, material);
+    mesh.rotateX(Math.PI / 2);
 
     this.add(mesh);
-    this.rotateX(Math.PI / 2);
   }
 
   override update(dt: number) {
