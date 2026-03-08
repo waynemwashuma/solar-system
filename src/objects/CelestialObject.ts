@@ -1,4 +1,4 @@
-import { Mesh, MeshBasicMaterial, Object3D, Quaternion, SphereGeometry, Vector3 } from "three"
+import { Mesh, MeshStandardMaterial, Object3D, Quaternion, SphereGeometry, Vector3 } from "three"
 import { textureLoader, transformVector3 } from "./utils"
 
 export type CelestialObjectOptions = {
@@ -27,7 +27,7 @@ export class CelestialObject extends Object3D {
     radius
   }: CelestialObjectOptions) {
     super()
-    const mesh = new Mesh(new SphereGeometry(radius, segments, segments), new MeshBasicMaterial({
+    const mesh = new Mesh(new SphereGeometry(radius, segments, segments), new MeshStandardMaterial({
       map: textures[0] ? textureLoader.load(textures[0]) : undefined,
     }));
     this.position.set(distance, 0, 0)

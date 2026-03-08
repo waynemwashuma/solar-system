@@ -1,4 +1,4 @@
-import { AmbientLight, AxesHelper, Object3D, PerspectiveCamera, Quaternion, Scene, Vector3, WebGLRenderer } from "three";
+import { AmbientLight, AxesHelper, Object3D, PerspectiveCamera, PointLight, Quaternion, Scene, Vector3, WebGLRenderer } from "three";
 import { FlyControls } from "./flycontrols.js";
 import { OrbitControls } from "./orbitcontrols.js";
 import { Asteriods, CelestialObject, createOrbitMesh, Moon, Planet, Ring, Sun, } from "./objects";
@@ -7,6 +7,8 @@ class Demo extends Scene {
   renderer: WebGLRenderer;
   commandElement: HTMLInputElement;
   camera: PerspectiveCamera;
+  sun: Sun | undefined;
+  sunLight: PointLight | undefined;
   focusedObject: Object3D | undefined;
   cameraController: FlyControls;
   orbitControls: OrbitControls;
@@ -60,8 +62,10 @@ class Demo extends Scene {
   async loadUnits() {
     const data = await this.loadData();
     const sun = new Sun(data.sun)
+    this.sun = sun
+    this.sunLight = sun.light
 
-    this.add(sun)
+    this.add(sun, sun.light)
     for (const key in data.planets) {
       if (Object.hasOwnProperty.call(data.planets, key)) {
         const planetData = data.planets[key];
@@ -180,6 +184,9 @@ class Demo extends Scene {
     }
   }
   update(dt: number) {
+    if (this.sun && this.sunLight) {
+      this.sunLight.position.copy(this.sun.getWorldPosition(new Vector3()))
+    }
     if (this.focusedObject) {
       this.orbitControls.target.copy(
         this.focusedObject.getWorldPosition(new Vector3())
