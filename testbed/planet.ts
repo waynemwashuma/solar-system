@@ -1,17 +1,35 @@
 import { GUI } from "dat.gui";
 import {
   AmbientLight,
+  BoxGeometry,
   Color,
   DirectionalLight,
   Group,
-  IcosahedronGeometry,
   Mesh,
   MeshPhysicalMaterial,
   PerspectiveCamera,
   Scene,
+  Vector3,
   WebGLRenderer,
 } from "three";
 import { OrbitControls } from "../src/orbitcontrols.js";
+
+function createSpherifiedCubeGeometry(radius: number, segments: number) {
+  const geometry = new BoxGeometry(radius * 2, radius * 2, radius * 2, segments, segments, segments);
+  const positions = geometry.getAttribute("position");
+  const vertex = new Vector3();
+
+  for (let i = 0; i < positions.count; i++) {
+    vertex.fromBufferAttribute(positions, i);
+    vertex.normalize().multiplyScalar(radius);
+    positions.setXYZ(i, vertex.x, vertex.y, vertex.z);
+  }
+
+  positions.needsUpdate = true;
+  geometry.computeVertexNormals();
+
+  return geometry;
+}
 
 const container = document.getElementById("app");
 
@@ -47,31 +65,46 @@ rimLight.position.set(-3, -1, -4);
 scene.add(ambientLight, keyLight, rimLight);
 
 const planet = new Group();
+const planetGeometry = createSpherifiedCubeGeometry(1.6, 24);
+const faceColors = [
+  0xff6b6b,
+  0xf7b267,
+  0xffe66d,
+  0x4ecdc4,
+  0x5dade2,
+  0xa29bfe,
+];
+const surfaceMaterials = faceColors.map((color) => new MeshPhysicalMaterial({
+  color,
+  roughness: 0.88,
+  metalness: 0.04,
+  clearcoat: 0.08,
+  wireframe: false,
+}));
 
 const surface = new Mesh(
-  new IcosahedronGeometry(1.6, 5),
-  new MeshPhysicalMaterial({
-    color: 0xb8d4ff,
-    roughness: 0.9,
-    metalness: 0.05,
-    wireframe: true,
-  }),
+  planetGeometry,
+  surfaceMaterials,
 );
 
 planet.add(surface);
 scene.add(planet);
 
 const guiState = {
-  wireframe: true,
+  wireframe: false,
 };
 
 const gui = new GUI({ name: "Planet Controls" });
 gui.width = 300;
 gui.add(guiState, "wireframe").name("Show wireframe").onChange((value: boolean) => {
-  surface.material.wireframe = value;
+  surfaceMaterials.forEach((material) => {
+    material.wireframe = value;
+  });
 });
 
-surface.material.wireframe = guiState.wireframe;
+surfaceMaterials.forEach((material) => {
+  material.wireframe = guiState.wireframe;
+});
 
 function resize() {
   const width = window.innerWidth;
