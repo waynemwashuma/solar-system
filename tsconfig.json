@@ -23,8 +23,9 @@
     "allowUnusedLabels": false,
 
     // module resolution
-    "module": "es2022",
-    "moduleResolution": "node",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
     "target": "es2022",
     "noEmit": true,
     "checkJs": true,

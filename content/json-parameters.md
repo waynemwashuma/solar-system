@@ -8,7 +8,7 @@ This document describes the parameters used by the solar system dataset under `a
 
 ## Shared Celestial Fields
 
-These are used by the `sun` object, planet objects in `planets`, moon objects, and ring objects where applicable.
+These are used by the `sun` object, planet objects in the `planets` array, moon objects, and ring objects where applicable.
 
 - `name` (string): Object identifier used in scene lookup/focus.
 - `radius` (number): Physical radius in **kilometers** for Sun/planets/moons.
@@ -42,7 +42,7 @@ Defines the Sun object.
 
 ## `solarSystem.planets`
 
-Top-level object keyed by planet name (`mercury`, `venus`, etc.).
+Top-level array of planet objects, ordered as they should appear in the dataset.
 
 Each planet entry uses shared celestial fields and may include:
 

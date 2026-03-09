@@ -2,11 +2,14 @@ import { AmbientLight, AxesHelper, Object3D, PerspectiveCamera, PointLight, Quat
 import { FlyControls } from "./flycontrols.js";
 import { OrbitControls } from "./orbitcontrols.js";
 import { Asteriods, CelestialObject, createOrbitMesh, Moon, ORBIT_DISTANCE_SCALE, Planet, Ring, Sun } from "./objects";
+import solarSystemData from "../assets/json/solarSystem.json" assert { type: "json" };
 
 type OrbitData = {
   apegree: number;
   pedigree: number;
 }
+
+type PlanetData = typeof solarSystemData.planets[number];
 
 class Demo extends Scene {
   renderer: WebGLRenderer;
@@ -51,6 +54,15 @@ class Demo extends Scene {
   orbitRangeFromData(orbit: OrbitData): [number, number] {
     return [orbit.pedigree / ORBIT_DISTANCE_SCALE, orbit.apegree / ORBIT_DISTANCE_SCALE]
   }
+  getPlanetData(name: PlanetData["name"]) {
+    const planetData = solarSystemData.planets.find((planet) => planet.name === name)
+
+    if (!planetData) {
+      throw new Error(`Missing planet data for ${name}`)
+    }
+
+    return planetData
+  }
   init() {
     const light = new AmbientLight(0xffffff, 0)
     const axis = new AxesHelper(100)
@@ -67,61 +79,58 @@ class Demo extends Scene {
     this.resize()
     document.body.append(this.renderer.domElement)
   }
-  async loadUnits() {
-    const data = await this.loadData();
+  loadUnits() {
+    const data = solarSystemData;
     const sun = new Sun(data.sun)
     this.sun = sun
     this.sunLight = sun.light
 
     this.add(sun, sun.light)
-    for (const key in data.planets) {
-      if (Object.hasOwnProperty.call(data.planets, key)) {
-        const planetData = data.planets[key];
-        const planet = new Planet(planetData)
-        if (planetData.moons) {
-          for (let i = 0; i < planetData.moons.length; i++) {
-            const moonData = planetData.moons[i];
-            const moon = new Moon(moonData)
-            planet.add(moon)
-            if (moon.orbitMajorRadius > 0) {
-              const moonOrbit = createOrbitMesh(moon.orbitMajorRadius, moon.orbitMinorRadius, 100)
-              moonOrbit.rotateX(moon.orbitOffsetAngle * (Math.PI / 180))
-              planet.add(moonOrbit)
-            }
+    for (const planetData of data.planets) {
+      const planet = new Planet(planetData)
+      if (planetData.moons) {
+        for (const moonData of planetData.moons) {
+          const moon = new Moon(moonData)
+          planet.add(moon)
+          if (moon.orbitMajorRadius > 0) {
+            const moonOrbit = createOrbitMesh(moon.orbitMajorRadius, moon.orbitMinorRadius, 100)
+            moonOrbit.rotateX(moon.orbitOffsetAngle * (Math.PI / 180))
+            planet.add(moonOrbit)
           }
         }
-        if (planetData.ring) {
-          const { ring } = planetData;
-          planet.add(new Ring({
-            ...ring,
-            revolutionSpeed: 0,
-          }))
-        }
-        sun.add(planet)
-        if (planet.orbitMajorRadius > 0) {
-          const planetOrbit = createOrbitMesh(planet.orbitMajorRadius, planet.orbitMinorRadius, 100)
-          planetOrbit.rotateX(planet.orbitOffsetAngle * (Math.PI / 180))
-          sun.add(planetOrbit)
-        }
+      }
+      if (planetData.ring) {
+        const { ring } = planetData;
+        planet.add(new Ring({
+          ...ring,
+          revolutionSpeed: 0,
+        }))
+      }
+      sun.add(planet)
+      if (planet.orbitMajorRadius > 0) {
+        const planetOrbit = createOrbitMesh(planet.orbitMajorRadius, planet.orbitMinorRadius, 100)
+        planetOrbit.rotateX(planet.orbitOffsetAngle * (Math.PI / 180))
+        sun.add(planetOrbit)
       }
     }
 
+    const mars = this.getPlanetData("mars")
+    const jupiter = this.getPlanetData("jupiter")
+    const neptune = this.getPlanetData("neptune")
+
     const innerBeltRange = this.orbitRangeFromData({
-      pedigree: data.planets.mars.orbit.pedigree,
-      apegree: data.planets.jupiter.orbit.apegree,
+      pedigree: mars.orbit.pedigree,
+      apegree: jupiter.orbit.apegree,
     })
     const outerBeltRange = this.orbitRangeFromData({
-      pedigree: data.planets.neptune.orbit.pedigree,
-      apegree: data.planets.neptune.orbit.apegree + 640,
+      pedigree: neptune.orbit.pedigree,
+      apegree: neptune.orbit.apegree + 640,
     })
     const outerBelt = new Asteriods(data.outerBelt, outerBeltRange)
     const innerBelt = new Asteriods(data.innerBelt, innerBeltRange)
 
     // sun.add(outerBelt)
     // sun.add(innerBelt)
-  }
-  async loadData() {
-    return fetch("/assets/json/solarSystem.json").then(data => data.json())
   }
   _raf() {
     this.animateNo = requestAnimationFrame((time) => {
