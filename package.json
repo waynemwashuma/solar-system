@@ -24,9 +24,11 @@
     "start": "vite"
   },
   "dependencies": {
+    "dat.gui": "^0.7.9",
     "three": "^0.181.1"
   },
   "devDependencies": {
+    "@types/dat.gui": "^0.7.13",
     "@types/three": "^0.181.0",
     "vite": "^7.2.2"
   }
