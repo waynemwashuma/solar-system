@@ -2,7 +2,8 @@ import { Mesh, MeshStandardMaterial, Object3D, SphereGeometry, Vector3 } from "t
 import { textureLoader } from "./utils"
 
 export const ORBIT_DISTANCE_SCALE = 1
-export const OBJECT_RADIUS_SCALE = 0.1 / 6378
+export const OBJECT_RADIUS_SCALE = 2
+export const EARTH_RADIUS_KM = 6378
 
 export type OrbitOptions = {
   apegree: number;
@@ -41,7 +42,7 @@ export class CelestialObject extends Object3D {
   }: CelestialObjectOptions) {
     super()
     const computedRadius = radius
-      ? radius * OBJECT_RADIUS_SCALE
+      ? Math.sqrt(radius / EARTH_RADIUS_KM) * OBJECT_RADIUS_SCALE
       : 0
     const mesh = new Mesh(new SphereGeometry(computedRadius, segments, segments), new MeshStandardMaterial({
       map: textures[0] ? textureLoader.load(textures[0]) : undefined,
