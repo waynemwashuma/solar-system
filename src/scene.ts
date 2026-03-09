@@ -1,7 +1,12 @@
 import { AmbientLight, AxesHelper, Object3D, PerspectiveCamera, PointLight, Quaternion, Scene, Vector3, WebGLRenderer } from "three";
 import { FlyControls } from "./flycontrols.js";
 import { OrbitControls } from "./orbitcontrols.js";
-import { Asteriods, CelestialObject, createOrbitMesh, Moon, Planet, Ring, Sun, } from "./objects";
+import { Asteriods, CelestialObject, createOrbitMesh, Moon, ORBIT_DISTANCE_SCALE, Planet, Ring, Sun } from "./objects";
+
+type OrbitData = {
+  apegree: number;
+  pedigree: number;
+}
 
 class Demo extends Scene {
   renderer: WebGLRenderer;
@@ -17,8 +22,8 @@ class Demo extends Scene {
   speed = 0.01
   constructor() {
     super()
-    this.renderer = new WebGLRenderer();
-    this.camera = new PerspectiveCamera(50, 1, 0.1, 1000)
+    this.renderer = new WebGLRenderer({ logarithmicDepthBuffer: true });
+    this.camera = new PerspectiveCamera(50, 1, 0.1, 10000)
     this.commandElement = document.getElementById('command-input') as HTMLInputElement
     this.cameraController = new FlyControls(this.camera, this.renderer.domElement)
     this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -42,6 +47,9 @@ class Demo extends Scene {
         event.preventDefault()
       }
     })
+  }
+  orbitRangeFromData(orbit: OrbitData): [number, number] {
+    return [orbit.pedigree / ORBIT_DISTANCE_SCALE, orbit.apegree / ORBIT_DISTANCE_SCALE]
   }
   init() {
     const light = new AmbientLight(0xffffff, 0)
@@ -73,9 +81,12 @@ class Demo extends Scene {
         if (planetData.moons) {
           for (let i = 0; i < planetData.moons.length; i++) {
             const moonData = planetData.moons[i];
-            planet.add(new Moon(moonData))
-            if (moonData.distance) {
-              planet.add(createOrbitMesh(moonData.distance, moonData.distance, 100))
+            const moon = new Moon(moonData)
+            planet.add(moon)
+            if (moon.orbitMajorRadius > 0) {
+              const moonOrbit = createOrbitMesh(moon.orbitMajorRadius, moon.orbitMinorRadius, 100)
+              moonOrbit.rotateX(moon.orbitOffsetAngle * (Math.PI / 180))
+              planet.add(moonOrbit)
             }
           }
         }
@@ -83,31 +94,37 @@ class Demo extends Scene {
           const { ring } = planetData;
           planet.add(new Ring({
             ...ring,
-            distance: 0,
             revolutionSpeed: 0,
           }))
         }
         sun.add(planet)
-        if (planetData.distance) {
-          sun.add(createOrbitMesh(planetData.distance, planetData.distance, 100))
+        if (planet.orbitMajorRadius > 0) {
+          const planetOrbit = createOrbitMesh(planet.orbitMajorRadius, planet.orbitMinorRadius, 100)
+          planetOrbit.rotateX(planet.orbitOffsetAngle * (Math.PI / 180))
+          sun.add(planetOrbit)
         }
       }
     }
 
-    const innerBeltRange: [number, number] = [data.planets.mars.distance, data.planets.jupiter.distance]
-    const outerBeltRange: [number, number] = [data.planets.neptune.distance, data.planets.neptune.distance + 50]
+    const innerBeltRange = this.orbitRangeFromData({
+      pedigree: data.planets.mars.orbit.pedigree,
+      apegree: data.planets.jupiter.orbit.apegree,
+    })
+    const outerBeltRange = this.orbitRangeFromData({
+      pedigree: data.planets.neptune.orbit.pedigree,
+      apegree: data.planets.neptune.orbit.apegree + 640,
+    })
     const outerBelt = new Asteriods(data.outerBelt, outerBeltRange)
     const innerBelt = new Asteriods(data.innerBelt, innerBeltRange)
 
-    sun.add(outerBelt)
-    sun.add(innerBelt)
+    // sun.add(outerBelt)
+    // sun.add(innerBelt)
   }
   async loadData() {
     const planets = await fetch('/assets/json/planets.json').then(data => data.json())
     const sun = await fetch("/assets/json/sun.json").then(data => data.json())
     const innerBelt = await fetch("/assets/json/innerBelt.json").then(data => data.json())
     const outerBelt = await fetch("/assets/json/outerBelt.json").then(data => data.json())
-
     return { planets, sun, innerBelt, outerBelt }
   }
   _raf() {

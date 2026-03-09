@@ -5,19 +5,24 @@ import { randomFloatFromRange, randomIntFromRange } from "./utils";
 
 export type AsteroidOptions = {
   number: number;
-  minDistance?: number;
-  maxDistance?: number;
+  orbit: {
+    minDistance: number;
+    maxDistance: number;
+  };
 };
 
 export class Asteriods extends CelestialObject {
-  constructor(params: CelestialObjectOptions & AsteroidOptions, range: [number, number]) {
-    super(params);
+  constructor(params: Omit<CelestialObjectOptions, "orbit"> & AsteroidOptions, range: [number, number]) {
+    const { orbit, ...celestialOptions } = params;
+    super(celestialOptions);
     this.clear();
-    this.initAsteroids(params, range);
+    this.initAsteroids({ ...params, orbit }, range);
   }
   initAsteroids(params: AsteroidOptions, range: [number, number]) {
     const asteroidBuffer = [];
     const beltRange = range[0] - range[1];
+    const minDistance = params.orbit.minDistance;
+    const maxDistance = params.orbit.maxDistance;
     for (let i = 0; i < params.number; i++) {
       const vector = new Vector3(
         randomFloatFromRange(-1, 1),
@@ -27,8 +32,8 @@ export class Asteriods extends CelestialObject {
         .normalize()
         .multiplyScalar(
           randomIntFromRange(
-            range[0] + beltRange * (params.minDistance || 1),
-            range[1] - beltRange * (1 - (params.maxDistance || 1))
+            range[0] + beltRange * minDistance,
+            range[1] - beltRange * (1 - maxDistance)
           )
         );
       asteroidBuffer.push(vector.x, vector.y, vector.z);
@@ -42,5 +47,3 @@ export class Asteriods extends CelestialObject {
     this.add(mesh);
   }
 }
-
-
