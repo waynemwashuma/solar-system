@@ -1,7 +1,0 @@
-{
-    "name":"sun",
-    "radius": 696000,
-    "segments":30,
-    "textures":["sun.jpg"],
-    "rotationSpeed":0.0003141592653589793
-}

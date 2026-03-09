@@ -1,17 +1,14 @@
 # JSON Parameters Reference
 
-This document describes the parameters used by all JSON files under `assets/json/`.
+This document describes the parameters used by the solar system dataset under `assets/json/`.
 
 ## Files
 
-- `assets/json/sun.json`
-- `assets/json/planets.json`
-- `assets/json/innerBelt.json`
-- `assets/json/outerBelt.json`
+- `assets/json/solarSystem.json`
 
 ## Shared Celestial Fields
 
-These are used by `sun.json`, planet objects in `planets.json`, moon objects, and ring objects where applicable.
+These are used by the `sun` object, planet objects in `planets`, moon objects, and ring objects where applicable.
 
 - `name` (string): Object identifier used in scene lookup/focus.
 - `radius` (number): Physical radius in **kilometers** for Sun/planets/moons.
@@ -36,14 +33,14 @@ Notes:
 - For planets, `apegree/pedigree` values are in million kilometers.
 - For moons, values are scene-scaled to keep local moon orbits readable.
 
-## `sun.json`
+## `solarSystem.sun`
 
 Defines the Sun object.
 
 - Uses shared celestial fields.
 - Typical fields present: `name`, `radius`, `segments`, `textures`, `rotationSpeed`.
 
-## `planets.json`
+## `solarSystem.planets`
 
 Top-level object keyed by planet name (`mercury`, `venus`, etc.).
 
@@ -62,7 +59,7 @@ Each planet entry uses shared celestial fields and may include:
   - `innerRadius` (number): Inner ring radius.
   - `outerRadius` (number): Outer ring radius.
 
-## `innerBelt.json` and `outerBelt.json`
+## `solarSystem.innerBelt` and `solarSystem.outerBelt`
 
 Defines asteroid belt generation settings.
 

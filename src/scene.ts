@@ -121,11 +121,7 @@ class Demo extends Scene {
     // sun.add(innerBelt)
   }
   async loadData() {
-    const planets = await fetch('/assets/json/planets.json').then(data => data.json())
-    const sun = await fetch("/assets/json/sun.json").then(data => data.json())
-    const innerBelt = await fetch("/assets/json/innerBelt.json").then(data => data.json())
-    const outerBelt = await fetch("/assets/json/outerBelt.json").then(data => data.json())
-    return { planets, sun, innerBelt, outerBelt }
+    return fetch("/assets/json/solarSystem.json").then(data => data.json())
   }
   _raf() {
     this.animateNo = requestAnimationFrame((time) => {
