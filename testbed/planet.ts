@@ -12,6 +12,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
+import { Atmosphere } from "./Atmosphere.js";
 import { OrbitControls } from "../src/orbitcontrols.js";
 
 function createSpherifiedCubeGeometry(radius: number, segments: number) {
@@ -65,7 +66,9 @@ rimLight.position.set(-3, -1, -4);
 scene.add(ambientLight, keyLight, rimLight);
 
 const planet = new Group();
-const planetGeometry = createSpherifiedCubeGeometry(1.6, 24);
+const planetRadius = 1.6;
+const atmosphereRadius = 1.73;
+const planetGeometry = createSpherifiedCubeGeometry(planetRadius, 24);
 const faceColors = [
   0xff6b6b,
   0xf7b267,
@@ -87,11 +90,21 @@ const surface = new Mesh(
   surfaceMaterials,
 );
 
+const atmosphere = new Atmosphere({
+  radius: atmosphereRadius,
+  segments: 24,
+});
+
 planet.add(surface);
+planet.add(atmosphere);
 scene.add(planet);
 
 const guiState = {
   wireframe: false,
+  atmosphereIntensity: 1.35,
+  atmosphereFalloff: 3.4,
+  atmosphereSunBoost: 1.1,
+  atmosphereThickness: atmosphereRadius,
 };
 
 const gui = new GUI({ name: "Planet Controls" });
@@ -101,6 +114,20 @@ gui.add(guiState, "wireframe").name("Show wireframe").onChange((value: boolean) 
     material.wireframe = value;
   });
 });
+gui.add(guiState, "atmosphereIntensity", 0, 3, 0.01).name("Atmosphere intensity").onChange((value: number) => {
+  atmosphere.setIntensity(value);
+});
+gui.add(guiState, "atmosphereFalloff", 1, 8, 0.01).name("Atmosphere falloff").onChange((value: number) => {
+  atmosphere.setFalloff(value);
+});
+gui.add(guiState, "atmosphereSunBoost", 0, 3, 0.01).name("Sun boost").onChange((value: number) => {
+  atmosphere.setSunBoost(value);
+});
+gui.add(guiState, "atmosphereThickness", planetRadius + 0.03, planetRadius + 0.35, 0.001)
+  .name("Atmosphere radius")
+  .onChange((value: number) => {
+    atmosphere.setRadius(value);
+  });
 
 surfaceMaterials.forEach((material) => {
   material.wireframe = guiState.wireframe;
@@ -119,6 +146,8 @@ function animate() {
   requestAnimationFrame(animate);
 
   surface.rotation.y += 0.0025;
+  atmosphere.rotation.y = surface.rotation.y;
+  atmosphere.update(camera.position, keyLight.position);
   controls.update(1 / 60);
 
   renderer.render(scene, camera);
