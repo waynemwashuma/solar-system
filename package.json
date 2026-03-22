@@ -21,7 +21,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "vite"
+    "start": "vite",
+    "build": "vite build"
   },
   "dependencies": {
     "dat.gui": "^0.7.9",
