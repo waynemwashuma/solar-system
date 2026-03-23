@@ -7,6 +7,7 @@ export default defineConfig(({ command }) => {
     port: 8082,
     strictPort: true,
     open: "./index.html",
-    base: isBuild ? '/solar-system/' : '/'
+    base: isBuild ? '/solar-system/' : '/',
+    publicDir:"./assets"
   }
 })

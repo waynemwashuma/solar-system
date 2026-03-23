@@ -2,7 +2,7 @@ import { AmbientLight, AxesHelper, Object3D, PerspectiveCamera, PointLight, Quat
 import { FlyControls } from "./flycontrols.js";
 import { OrbitControls } from "./orbitcontrols.js";
 import { Asteriods, CelestialObject, createOrbitMesh, Moon, ORBIT_DISTANCE_SCALE, Planet, Ring, Sun } from "./objects";
-import solarSystemData from "../assets/json/solarSystem.json" assert { type: "json" };
+import solarSystemData from "./data/solarSystem.json" assert { type: "json" };
 
 type OrbitData = {
   apegree: number;

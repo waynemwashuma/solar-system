@@ -1,7 +1,7 @@
 import { BufferGeometry, LineBasicMaterial, LineLoop, Quaternion, TextureLoader, Vector3 } from "three"
 
 export const textureLoader = new TextureLoader()
-textureLoader.setPath('/assets/img/')
+textureLoader.setPath(`${import.meta.env.BASE_URL}img/`)
 
 export function randomIntFromRange(min: number, max: number) {
   return Math.round((Math.random() * (max - min)) + min)
